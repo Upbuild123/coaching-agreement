@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: upbuild-contract-automation
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app.py --server.port $PORT --server.address 0.0.0.0
+    envVars:
+      - key: GMAIL_USER
+        sync: false
+      - key: GMAIL_PASSWORD
+        sync: false
+      - key: NOTIFY_EMAIL
+        value: michael@upbuild.com
