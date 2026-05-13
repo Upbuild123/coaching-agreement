@@ -97,10 +97,10 @@ def build_agreement_bytes(first_name: str, last_name: str, coach: str, rate: str
     document = docx.Document(tmp_path)
 
     replacements = [
-        ("Alexis Gevorgian", client_full),
-        ("Alexis",           first_name),
-        ("Rasanath Das",     coach),
-        ("$600",             f"${rate}"),
+        ("[Client Full Name]",  client_full),
+        ("[Client First Name]", first_name),
+        ("[Coach Name]",        coach),
+        ("[Rate]",              rate),
     ]
 
     for para in document.paragraphs:
