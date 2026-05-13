@@ -32,7 +32,7 @@ COACHES = [
     "Vipin Goyal",
 ]
 
-TEMPLATE = Path(__file__).parent / "Dummy Agreement.docx"
+TEMPLATE = Path(__file__).parent / "Upbuild Coaching Agreement - Sample.docx"
 
 
 # ---------------------------------------------------------------------------
