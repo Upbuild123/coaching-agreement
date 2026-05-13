@@ -32,6 +32,13 @@ COACHES = [
     "Vipin Goyal",
 ]
 
+COACH_EMAILS = {
+    "Rasanath Das":    "rasanath@upbuild.com",
+    "Hari Prasada Das": "hari@upbuild.com",
+    "Tzipi Weiss":     "tzipi@upbuild.com",
+    "Vipin Goyal":     "vipin@upbuild.com",
+}
+
 TEMPLATE = Path(__file__).parent / "Upbuild Coaching Agreement - Sample.docx"
 
 
@@ -123,12 +130,16 @@ def send_email(first_name: str, last_name: str, client_email: str,
     gmail_pass = get_secret("GMAIL_PASSWORD")
     notify_to  = get_secret("NOTIFY_EMAIL") or gmail_user
 
+    recipients = [notify_to]
+    if coach in COACH_EMAILS:
+        recipients.append(COACH_EMAILS[coach])
+
     client_full = f"{first_name} {last_name}"
     filename    = f"{client_full} Upbuild Agreement.docx"
 
     msg = MIMEMultipart()
     msg["From"]    = gmail_user
-    msg["To"]      = notify_to
+    msg["To"]      = ", ".join(recipients)
     msg["Subject"] = f"New Coaching Agreement — {client_full}"
 
     body = (
@@ -147,7 +158,7 @@ def send_email(first_name: str, last_name: str, client_email: str,
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
         server.login(gmail_user, gmail_pass)
-        server.sendmail(gmail_user, notify_to, msg.as_string())
+        server.sendmail(gmail_user, recipients, msg.as_string())
 
 
 # ---------------------------------------------------------------------------
