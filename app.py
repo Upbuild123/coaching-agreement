@@ -96,6 +96,7 @@ def replace_in_paragraph(para, old: str, new: str):
 
 def build_agreement_bytes(first_name: str, last_name: str, coach: str, rate: str) -> bytes:
     client_full = f"{first_name} {last_name}"
+    rate = f"{int(rate):,}"
 
     with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as tmp:
         tmp_path = Path(tmp.name)
