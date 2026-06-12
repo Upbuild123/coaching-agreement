@@ -54,8 +54,10 @@ def default_state(engagement_type: str) -> dict:
         "estimate_disclaimer": True,
         "include_additional_services": True,
         "additional_services_text": (
-            "Fees for any additional services will depend on the scope of the "
-            "services and will be discussed and agreed upon in advance."
+            "The fee(s) for other Services are dependent on the Service and will be "
+            "discussed and agreed upon before proceeding. The Company may change its "
+            "fee schedule from time to time, but any change in fees will be "
+            "communicated and agreed to by the Client."
         ),
         "include_expenses": False,
         "expense_categories": ["Travel", "Lodging", "Meals"],
@@ -65,26 +67,26 @@ def default_state(engagement_type: str) -> dict:
         "expense_approver": "the Client",
         "invoice_frequency": "Quarterly",
         "invoice_frequency_custom": "",
-        "payment_terms": "30 Days",
+        "payment_terms": "15 Days",
         "payment_terms_custom": "",
     }
 
     if engagement_type == "Standard Coaching":
         state["fee_items"] = [
-            {"name": "1:1 coaching", "pricing_type": "Hourly", "rate": "650", "notes": ""},
+            {"name": "1:1 coaching", "pricing_type": "Hourly", "rate": "", "notes": ""},
         ]
         state["cancellation_policies"] = [
-            {"policy_type": "Standard Coaching", "service_type": "session",
-             "notice_period": "2", "charge_text": "the full session fee", "additional_text": ""},
+            {"policy_type": "Standard Coaching", "service_type": "",
+             "notice_period": "2", "charge_text": "", "additional_text": ""},
         ]
 
     elif engagement_type == "Executive Coaching":
         state["fee_items"] = [
-            {"name": "executive coaching", "pricing_type": "Hourly", "rate": "975", "notes": ""},
+            {"name": "executive coaching", "pricing_type": "Hourly", "rate": "", "notes": ""},
         ]
         state["cancellation_policies"] = [
-            {"policy_type": "Standard Coaching", "service_type": "session",
-             "notice_period": "2", "charge_text": "the full session fee", "additional_text": ""},
+            {"policy_type": "Standard Coaching", "service_type": "",
+             "notice_period": "2", "charge_text": "", "additional_text": ""},
         ]
 
     elif engagement_type == "Variable Coaching Rates":
@@ -111,6 +113,7 @@ def default_state(engagement_type: str) -> dict:
     elif engagement_type == "Enterprise Engagement":
         state["fee_structure_mode"] = "Estimated Annual Investment"
         state["estimate_amount"] = "150,000"
+        state["payment_terms"] = "30 Days"
         state["fee_items"] = [
             {"name": "coaching", "pricing_type": "Hourly", "rate": "1,200", "notes": ""},
             {"name": "in-person leadership team sessions", "pricing_type": "Daily", "rate": "10,000", "notes": ""},
@@ -151,6 +154,39 @@ def _money(value: str) -> str:
     return value.strip()
 
 
+_UNIT_BY_PRICING_TYPE = {
+    "Hourly": "/hour",
+    "Daily": "/day",
+    "Per Session": "/session",
+}
+
+
+def _simple_fee_sentence(item: dict) -> Optional[str]:
+    """A standalone sentence like 'The fee for 1:1 coaching is $650/hour.'
+
+    Used when there's a single fee item under Fixed Rates. If no rate has
+    been entered yet, '(Fee)' is used as a placeholder.
+    """
+    name = item.get("name", "").strip()
+    if not name:
+        return None
+    rate = item.get("rate", "").strip()
+    ptype = item.get("pricing_type", "Hourly")
+
+    if ptype == "Custom Text":
+        return rate if rate else None
+
+    rate_disp = _money(rate) if rate else "(Fee)"
+
+    if ptype == "Fixed Fee":
+        if rate:
+            return f"The fee for {name} is a fixed fee of ${rate_disp}."
+        return f"The fee for {name} is $(Fee)."
+
+    unit = _UNIT_BY_PRICING_TYPE.get(ptype, "/hour")
+    return f"The fee for {name} is ${rate_disp}{unit}."
+
+
 def _fee_item_clause(item: dict, mode: str) -> Optional[str]:
     """A short clause like '$650 per hour for 1:1 coaching' (no leading 'The fee for...')."""
     name = item.get("name", "").strip()
@@ -180,7 +216,13 @@ def _fee_item_clause(item: dict, mode: str) -> Optional[str]:
 def build_fees_paragraphs(fee_items: List[dict], mode: str, estimate_amount: str, estimate_disclaimer: bool) -> List[str]:
     """Build the first paragraph(s) of Section 3 covering fee structure."""
     paragraphs = []
-    intro = "Fees for Services are based on the scope of work and participation levels agreed upon by the parties."
+
+    named_items = [item for item in fee_items if item.get("name", "").strip()]
+
+    if mode == "Fixed Rates" and len(named_items) == 1:
+        sentence = _simple_fee_sentence(named_items[0])
+        if sentence:
+            return [sentence]
 
     if mode == "Variable Rates":
         names = [item.get("name", "").strip() for item in fee_items if item.get("name", "").strip()]
@@ -193,9 +235,7 @@ def build_fees_paragraphs(fee_items: List[dict], mode: str, estimate_amount: str
                 f"The fee for {names_phrase} will be agreed upon on a "
                 f"case-by-case basis based on the Coach and Client Employee."
             )
-            paragraphs.append(f"{intro} {sentence}")
-        else:
-            paragraphs.append(intro)
+            paragraphs.append(sentence)
 
     else:
         clauses = [c for c in (_fee_item_clause(item, mode) for item in fee_items) if c]
@@ -205,9 +245,7 @@ def build_fees_paragraphs(fee_items: List[dict], mode: str, estimate_amount: str
             else:
                 clause_phrase = ", ".join(clauses[:-1]) + f", and {clauses[-1]}"
             sentence = f"For this engagement, the Company is providing Services at {clause_phrase}."
-            paragraphs.append(f"{intro} {sentence}")
-        else:
-            paragraphs.append(intro)
+            paragraphs.append(sentence)
 
         if mode == "Estimated Annual Investment" and estimate_amount.strip():
             est = (
@@ -220,7 +258,10 @@ def build_fees_paragraphs(fee_items: List[dict], mode: str, estimate_amount: str
                     " Actual fees will vary based on final participation, session "
                     "cadence, and any adjustments to the scope of Services."
                 )
-            paragraphs[-1] = paragraphs[-1] + " " + est
+            if paragraphs:
+                paragraphs[-1] = paragraphs[-1] + " " + est
+            else:
+                paragraphs.append(est)
 
     return paragraphs
 
@@ -282,21 +323,18 @@ def build_expenses_text(config: dict) -> List[str]:
 
 def build_invoicing_text(config: dict) -> List[str]:
     frequency = config.get("invoice_frequency", "Quarterly")
-    if frequency == "Quarterly":
-        freq_sentence = (
-            "Invoices will be issued on a quarterly basis and will reflect actual "
-            "Services delivered during the applicable period."
-        )
-    elif frequency == "Monthly":
-        freq_sentence = (
-            "Invoices will be issued on a monthly basis and will reflect actual "
-            "Services delivered during the applicable period."
-        )
-    elif frequency == "Upon Completion":
-        freq_sentence = "The Company will provide an invoice to the Client upon completion of the Services."
-    else:
+
+    if frequency == "Custom":
         custom = config.get("invoice_frequency_custom", "").strip()
-        freq_sentence = custom or "Invoices will be issued on a periodic basis agreed upon by the parties."
+        return [custom] if custom else [
+            "Invoicing frequency and payment terms will be discussed and agreed upon by the parties."
+        ]
+
+    freq_phrase = {
+        "Quarterly": "one time per quarter",
+        "Monthly": "one time per month",
+        "Upon Completion": "upon completion of the Services",
+    }.get(frequency, "one time per quarter")
 
     terms = config.get("payment_terms", "15 Days")
     if terms == "15 Days":
@@ -304,16 +342,47 @@ def build_invoicing_text(config: dict) -> List[str]:
     elif terms == "30 Days":
         terms_phrase = "30 days"
     else:
-        terms_phrase = config.get("payment_terms_custom", "").strip() or "30 days"
+        terms_phrase = config.get("payment_terms_custom", "").strip() or "15 days"
 
-    return [f"{freq_sentence} Payment is due within {terms_phrase} of the invoice date."]
+    return [f"The Company will provide an invoice to the Client {freq_phrase}, and payment is due within {terms_phrase} of the invoice date."]
+
+
+_NUMBER_WORDS = {
+    "1": "one", "2": "two", "3": "three", "4": "four", "5": "five",
+    "6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten",
+}
+
+
+def _spell_number(value: str) -> str:
+    value = value.strip()
+    return _NUMBER_WORDS.get(value, value)
 
 
 def build_cancellation_text(policies: List[dict]) -> List[str]:
     """Return the cancellation policy as a lead-in sentence plus bullet lines (prefixed with '• ')."""
+    real_policies = [p for p in policies if p.get("policy_type")]
+
+    # Simple single-policy phrasing for the common "Standard Coaching" case.
+    if len(real_policies) == 1 and real_policies[0]["policy_type"] == "Standard Coaching":
+        policy = real_policies[0]
+        notice = _spell_number(policy.get("notice_period", "2") or "2")
+        charge = policy.get("charge_text", "").strip()
+        charge_clause = f" {charge}" if charge else ""
+        sentence = (
+            f"A session canceled more than {notice} business days before the "
+            f"session will not be charged. A session canceled by the Client "
+            f"within {notice} business days of the session will be charged"
+            f"{charge_clause}."
+        )
+        lines = [f"The cancellation policy in effect is as follows: {sentence}"]
+        additional = policy.get("additional_text", "").strip()
+        if additional:
+            lines.append(additional)
+        return lines
+
     bullets = []
 
-    for policy in policies:
+    for policy in real_policies:
         ptype = policy.get("policy_type")
         service = policy.get("service_type", "").strip()
         if not ptype:
