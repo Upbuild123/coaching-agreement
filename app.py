@@ -168,68 +168,80 @@ def send_email(first_name: str, last_name: str, client_email: str,
 
 load_env()
 
-st.set_page_config(page_title="New Coaching Agreement", page_icon="📄", layout="centered")
+st.set_page_config(page_title="Upbuild | New Coaching Agreement", page_icon="📄", layout="centered")
 
 st.markdown("""
 <style>
     .stApp {
-        background: linear-gradient(135deg, #f5f5f0 0%, #eef2ee 100%);
+        background: #f4f5f7;
     }
     .block-container {
         max-width: 640px;
-        padding-top: 3rem;
+        padding-top: 0 !important;
     }
-    #upbuild-card {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 2.5rem 2.5rem 1.5rem;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-        border: 1px solid #e8e8e2;
-        margin-bottom: 1.5rem;
-    }
-    #upbuild-card h1 {
-        font-size: 1.6rem;
+    #upbuild-topbar {
+        background: #14141f;
+        color: #ffffff;
+        margin: -1px -1px 2.5rem -1px;
+        padding: 1.1rem 2rem;
+        border-radius: 0 0 12px 12px;
+        font-size: 1.15rem;
         font-weight: 700;
-        color: #2c3e2e;
-        margin-bottom: 0.25rem;
+        letter-spacing: 0.04em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
-    #upbuild-card p {
-        color: #6b7268;
+    #upbuild-heading h1 {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1a1a2e;
+        margin-bottom: 0.35rem;
+    }
+    #upbuild-heading p {
+        color: #6b7280;
         font-size: 0.95rem;
-        margin-bottom: 0;
+        margin-bottom: 1.75rem;
     }
     div[data-testid="stForm"] {
         background: #ffffff;
-        border-radius: 16px;
-        padding: 2rem 2.5rem 2.5rem;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-        border: 1px solid #e8e8e2;
+        border-radius: 14px;
+        padding: 2rem 2.25rem 2.25rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 12px rgba(0,0,0,0.04);
+        border: 1px solid #eaeaf0;
     }
-    .stTextInput input, .stSelectbox div[data-baseweb="select"] {
-        border-radius: 8px;
+    .stTextInput input, .stSelectbox div[data-baseweb="select"] > div {
+        border-radius: 8px !important;
+        border-color: #e0e0e8 !important;
+    }
+    .stTextInput input:focus, .stSelectbox div[data-baseweb="select"]:focus-within > div {
+        border-color: #5b2a8c !important;
+        box-shadow: 0 0 0 1px #5b2a8c !important;
     }
     .stButton button, button[kind="primary"], button[kind="formSubmit"] {
-        background-color: #4a7c5e !important;
+        background-color: #5b2a8c !important;
         color: #fff !important;
         border-radius: 8px !important;
         border: none !important;
         font-weight: 600 !important;
-        padding: 0.6rem 1.5rem !important;
+        padding: 0.65rem 1.5rem !important;
         transition: background-color 0.15s ease !important;
     }
     .stButton button:hover, button[kind="primary"]:hover, button[kind="formSubmit"]:hover {
-        background-color: #3a6349 !important;
+        background-color: #471f6e !important;
     }
     label {
-        font-weight: 500 !important;
-        color: #3a3f3a !important;
+        font-weight: 600 !important;
+        color: #374151 !important;
+        font-size: 0.9rem !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown("""
-<div id="upbuild-card">
-    <h1>📄 New Coaching Agreement</h1>
+<div id="upbuild-topbar">🥾 UPBUILD</div>
+<div id="upbuild-heading">
+    <h1>New Coaching Agreement</h1>
     <p>Fill in the client's details below to generate and send the agreement.</p>
 </div>
 """, unsafe_allow_html=True)
