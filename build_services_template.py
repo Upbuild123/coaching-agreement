@@ -24,180 +24,206 @@ def p(text):
     doc.add_paragraph(text)
 
 
-def bullet(text):
-    doc.add_paragraph(text, style="List Bullet")
+def bold_lead(lead, rest):
+    para = doc.add_paragraph()
+    run = para.add_run(lead)
+    run.bold = True
+    para.add_run(rest)
 
 
 # Title
-title = doc.add_heading("Upbuild Services Agreement", level=0)
+doc.add_heading("Upbuild Services Agreement", level=0)
 
 p(
     "This Agreement is entered into by and between: [Client Company Name] (Client) and "
-    "Upbuild (Company) and is effective as of the date the Client signs below. Through a "
-    "relationship with one or more Upbuild coaches (each, a Coach), the Company agrees to "
-    "provide coaching, consulting, and/or mediation services for individual employees of the "
-    "Client (Client Employees) focusing on topics and goals to be defined by the Client and/or "
-    "Client Employees, and the Coach. This Agreement supersedes all prior agreements between "
-    "the parties regarding the subject matter herein."
+    "Upbuild (Company) and is effective as of the date the Client signs below. The Company "
+    "agrees to provide coaching, consulting, mediation, workshops, 360 Degree Reviews, and "
+    "related leadership development services through one or more Upbuild coaches (each, a "
+    "“Coach”) for the Client and/or its employees, leaders, and other designated participants. "
+    "This Agreement supersedes all prior agreements between the parties."
 )
 
-h1("1. Description of Services.")
-bullet(
-    "Coaching. Coaching is a partnership between the Coach and Client Employees in a "
+h1("1. Description of Services")
+
+bold_lead(
+    "Coaching. ",
+    "Coaching is a partnership between the Coach and Client Employees in a "
     "thought-provoking and creative process that inspires Client Employees to maximize "
     "personal and professional potential (Coaching)."
 )
-bullet(
-    "360 Degree Reviews. A “360” is a structured process facilitated by the Coach "
-    "for the Client and/or Client Employees to get feedback from team members, peers, and "
-    "other stakeholders (360 Degree Reviews)."
+bold_lead(
+    "360 Degree Reviews. ",
+    "A “360” is a structured process facilitated by the Coach for the Client and/or "
+    "Client Employees to get feedback from team members, peers, and other stakeholders "
+    "(360 Degree Reviews)."
 )
-bullet(
-    "Mediation. Mediation is a structured and customized process facilitated by the Coach to "
-    "help identify gaps in trust and rebuild it between or among Client Employees where it has "
+bold_lead(
+    "Mediation. ",
+    "Mediation is a structured and customized process facilitated by the Coach to help "
+    "identify gaps in trust and rebuild it between or among Client Employees where it has "
     "eroded."
 )
-bullet(
-    "Workshops. Workshops are group learning opportunities facilitated by the Coach designed "
-    "to develop applied knowledge in a specific area, build trust, foster connection, and "
-    "unlock potential in the Client’s organization."
+bold_lead(
+    "Workshops. ",
+    "Workshops are group learning opportunities facilitated by the Coach designed to develop "
+    "applied knowledge in a specific area, build trust, foster connection, and unlock "
+    "potential in the Client’s organization."
 )
-bullet(
-    "Consulting. Throughout the term of this Agreement, at times convenient to the Coach and "
-    "the Client, and upon the Client’s request, the Coach may provide additional consulting "
-    "and/or professional services based on the hourly rate below."
+bold_lead(
+    "Consulting. ",
+    "Throughout the term of this Agreement, at times convenient to the Coach and the Client, "
+    "and upon the Client’s request, the Coach may provide additional consulting and/or "
+    "professional services based on the hourly rate below."
 )
 
 h1("2. Coach-Client Relationship")
-bullet(
-    "The Coach agrees to maintain the ethics and standards of behavior established by the "
-    "International Coach Federation (coachfederation.org/ethics)."
-)
-bullet(
-    "The Client acknowledges that the services described above are comprehensive processes "
-    "that may involve different areas of life, including work, finances, health, "
-    "relationships, and education."
-)
-bullet(
-    "The Client agrees that deciding how to handle these issues, incorporating coaching "
-    "principles into those areas, and implementing choices is the sole responsibility of "
-    "Client Employees."
-)
-bullet(
-    "The Client acknowledges that the services described above are not therapy and do not "
-    "substitute for therapy, if needed. The Client also understands that these services do not "
-    "involve the diagnosis, treatment, or cure of mental disorders or medical condition or "
-    "disease, and that they are not a substitute for counseling, psychotherapy, substance abuse "
-    "treatment, or other medical, mental, or other professional advice. It is the Client’s "
-    "team members, employees, or stakeholders’ responsibility to seek independent "
-    "professional guidance, as needed."
-)
-
-h1("3. Fees, Expenses, and Cancellation Policy.")
-doc.add_paragraph("[FEES_SECTION]")
-
-h1("4. Termination.")
 p(
-    "Either the Client or the Company may terminate this Agreement at any time upon 48 hours’ "
-    "notice, provided in writing via email or text. All fees for Services rendered will become "
-    "due and payable within 30 days of termination and the parties’ rights and obligations "
-    "described in this Agreement will survive the termination of the relationship. The Client "
-    "agrees to compensate the Company for all Services rendered through the date of "
-    "termination."
+    "The Coach agrees to maintain the ethics and standards of behavior established by the "
+    "International Coach Federation (coachfederation.org/ethics). The Client acknowledges "
+    "that the Services may involve discussions relating to leadership, communication, "
+    "decision-making, relationships, organizational dynamics, career development, and other "
+    "personal and professional matters. The Client and its employees, leaders, and other "
+    "participants remain solely responsible for their decisions, actions, and implementation "
+    "of any insights, recommendations, or learnings arising from the Services. The Client "
+    "acknowledges that the Services are not therapy and do not substitute for therapy, if "
+    "needed. The Client also understands that the Services do not involve the diagnosis, "
+    "treatment, or cure of mental disorders, medical conditions, or diseases, and are not a "
+    "substitute for counseling, psychotherapy, substance abuse treatment, or other medical, "
+    "mental health, legal, financial, or professional advice. Participants are encouraged to "
+    "seek independent professional guidance, as appropriate."
+)
+
+h1("3. Fees, Expenses, and Cancellation Policy")
+doc.add_paragraph("[Fee Section]")
+doc.add_paragraph("[Cancellation Policy]")
+p(
+    "Invoices will be issued on a quarterly basis and will reflect actual Services delivered "
+    "during the applicable period. Payment is due within 30 days of the invoice date."
+)
+
+h1("4. Termination")
+p(
+    "Either party may terminate this Agreement upon 15 days’ written notice. All fees for "
+    "Services rendered will become due and payable within 30 days of termination and the "
+    "parties’ rights and obligations described in this Agreement will survive the termination "
+    "of the relationship. The Client agrees to compensate the Company for all Services "
+    "rendered through the date of termination."
 )
 p(
     "When a Client Employee is ready to complete coaching, the Company requests that the "
     "Client Employee schedule a final coaching session as a “completion session” for closure."
 )
 
-h1("5. Confidentiality.")
+h1("5. Confidentiality and Intellectual Property")
 p(
-    "Unless the parties expressly agree otherwise in writing, all materials and content used or "
-    "created by the Company or the Coach in connection with the Services are considered the "
-    "Company’s proprietary and confidential information (“Confidential Information”) and "
-    "belong to the Company. The Client agrees to keep confidential, not disclose, and to "
-    "protect the Confidential Information. Notwithstanding, Confidential Information does not "
-    "include information that is generally known to the public (by no fault of the Client) or "
-    "was independently developed by the Client and does not relate to the Services provided "
-    "hereunder."
+    "The Company and the Client agree to keep confidential any non-public information shared "
+    "in connection with the Services and to use such information only for purposes related to "
+    "this engagement."
 )
 p(
-    "Additionally, the Coach/Client relationship is one of confidence and trust. The Coach "
-    "agrees to keep all information shared by the Client confidential, except when maintaining "
-    "such confidentiality would violate the law or the International Coaching Federation (ICF) "
-    "Code of Ethics. Notwithstanding the foregoing, the Coach may share Client information "
-    "within the Company for training and support purposes, and with Client Employee’s "
-    "consent, the Company may share Client Employee’s name and email address with the ICF "
-    "for credentialing purposes."
-)
-
-h1("6. Independent Contractor.")
-p(
-    "At all times the Company and the Client shall be deemed to be in a business-to-business "
-    "relationship. Nothing herein shall be construed to create or imply that there exists "
-    "between the parties a partnership, joint venture or other combined business organization. "
-    "The Coach holds no authority, express or implied, to commit, obligate, or make "
-    "representations on behalf of the Client and shall make no representation to others to the "
-    "contrary. Nothing herein is intended nor shall be construed for any purpose as creating "
-    "the relation of employer and employee or agent and principal between the parties. Except "
-    "as otherwise specified herein, the Coach retains the right to direct, control or supervise "
-    "the details and means by which the Services are provided. The Coach shall not be eligible "
-    "for, or participate in, any insurance, pension, workers’ compensation insurance, profit "
-    "sharing or other plans established for the benefit of Client Employees."
+    "The Company will treat information shared by the Client, its employees, and other "
+    "participants in connection with the Services as confidential and will not disclose such "
+    "information except as necessary to provide the Services, as permitted by this Agreement, "
+    "or as required by law or applicable ethical obligations."
 )
 p(
-    "The Company shall be responsible for payment of all taxes arising out of the Coach’s "
-    "activities in connection with this Agreement, including without limitation, federal and "
-    "state income taxes, social security taxes, unemployment insurance taxes, and any other "
-    "taxes or business license fees as required. The Client shall not be responsible for "
-    "withholding any income or employment taxes whatsoever on behalf of the Coach."
-)
-
-h1("7. Limited Liability and Indemnification.")
-p(
-    "Except as outlined in this Agreement, neither the Company nor the Coach makes any "
-    "guarantees with respect to the Services, and will not be liable to the Client for any "
-    "indirect, consequential, or special damages. The Client and its team members, employees, "
-    "and other stakeholders are responsible for his/her/their own physical, mental and "
-    "emotional well-being, decisions, choices, actions and results, including without "
-    "limitation the Client’s or the team member’s, employee’s, or other stakeholder’s "
-    "decisions they make as a result of the Services. To be clear, neither the Coach nor the "
-    "Company is responsible or liable for any actions or inaction, or for any direct or "
-    "indirect result of any of the Services, including without limitation if a team member, "
-    "employee, or other stakeholder decides to quit or is terminated as a direct or indirect "
-    "result of the Company’s Services."
+    "For coaching engagements, the parties acknowledge that the effectiveness of coaching "
+    "depends upon a relationship of trust and confidentiality. Accordingly, individual "
+    "coaching conversations, communications, notes, assessments, and other information shared "
+    "by a coaching participant will not be disclosed to the Client without that participant’s "
+    "consent, except as required by law or applicable ethical obligations."
 )
 p(
-    "ALL SERVICES ARE PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR "
-    "IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND "
-    "FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE "
-    "SERVICES IS WITH THE CLIENT. The Client shall indemnify and hold harmless the Company and "
-    "its affiliates, directors, officers, employees, partners, contractors, coaches, or agents, "
-    "from and against any and all claims, actions, causes of action, demands, or liabilities of "
-    "whatsoever kind and nature, including judgments, interest, reasonable attorneys’ fees, "
-    "and all other costs, fees, expenses, and charges (collectively, “Claims”) to the contrary "
-    "which are brought by any third party including but not limited to the Client and its "
-    "employees, team members, partners or other stakeholders."
+    "The Company may share with the Client high-level observations, developmental themes, "
+    "participation information, attendance information, progress updates, and "
+    "recommendations related to the Services, provided that such information does not "
+    "disclose confidential communications attributable to a specific individual without that "
+    "individual’s consent."
 )
 p(
-    "IN NO EVENT SHALL THE COMPANY BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, "
-    "PUNITIVE OR CONSEQUENTIAL DAMAGES INCURRED BY THE CLIENT OR ANY THIRD PARTY, WHETHER IN "
-    "CONTRACT, TORT, OR BASED UPON A WARRANTY, EVEN IF THE CLIENT OR ANY THIRD PARTY HAS BEEN "
-    "ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. THE TOTAL LIABILITY OF THE COMPANY TO THE "
-    "CLIENT SHALL NOT EXCEED THE SUM OF THE FEES PAID TO THE COMPANY BY THE CLIENT HEREUNDER."
+    "The Company may discuss Client matters internally with its coaches, employees, "
+    "contractors, and advisors as reasonably necessary for training, supervision, quality "
+    "assurance, and the delivery of Services, provided such individuals are subject to "
+    "appropriate confidentiality obligations."
+)
+p(
+    "The Client acknowledges that the Company may use proprietary methodologies, frameworks, "
+    "assessments, exercises, workshop materials, presentations, and other intellectual "
+    "property in connection with the Services (“Upbuild Materials”). All Upbuild Materials "
+    "shall remain the sole property of the Company. The Client may use such materials "
+    "internally for its own business purposes but may not reproduce, distribute, sell, "
+    "publish, or provide them to third parties without the Company’s prior written consent."
+)
+p(
+    "Confidential information does not include information that becomes publicly available "
+    "through no fault of the receiving party or information independently developed without "
+    "use of the other party’s confidential information."
 )
 
-h1("8. Applicable Law and Attorneys’ Fees.")
+h1("6. Independent Contractor")
 p(
-    "This Agreement shall be governed and construed in accordance with the laws of New York. "
-    "In the event of any legal dispute concerning any controversy between the parties or "
-    "otherwise arising out of or related to the subject matter of this Agreement, the "
-    "prevailing party shall be entitled to recover from the losing party reasonable expenses, "
-    "attorneys’ fees, pre and post-judgment interest, and all other costs, expenses and fees "
-    "incurred in connection with the enforcement of the terms of this Agreement at all trial "
-    "and appellate levels including demonstrating the existence of a breach, seeking and "
-    "obtaining equitable relief, and any other enforcement efforts, from the non-prevailing "
-    "party."
+    "The relationship between the Company and the Client is that of independent contracting "
+    "parties. Nothing in this Agreement shall be construed to create a partnership, joint "
+    "venture, employment relationship, agency relationship, or other similar arrangement "
+    "between the parties."
+)
+p(
+    "The Company and its Coaches shall have sole discretion regarding the manner, method, and "
+    "means by which the Services are provided. Nothing in this Agreement shall be interpreted "
+    "as giving the Client authority to direct or control the professional judgment, coaching "
+    "approach, or delivery of the Services by the Company or its Coaches."
+)
+p(
+    "Neither the Company nor any Coach shall have authority to bind, obligate, or make "
+    "representations on behalf of the Client unless expressly authorized in writing."
+)
+p(
+    "The Company shall be solely responsible for all compensation, taxes, insurance, and other "
+    "obligations relating to its employees, contractors, Coaches, and other representatives. "
+    "The Client shall have no responsibility for any compensation, benefits, taxes, or other "
+    "obligations relating to individuals providing Services on behalf of the Company."
+)
+
+h1("7. Limitation of Liability")
+p(
+    "The Services provided under this Agreement are intended to support learning, "
+    "development, communication, leadership growth, and organizational effectiveness. While "
+    "the Company will use reasonable care and professional judgment in delivering the "
+    "Services, the Company does not guarantee any particular outcome, result, business "
+    "performance, employment outcome, or organizational change."
+)
+p(
+    "The Client acknowledges that decisions made by the Client, its employees, team members, "
+    "and other participants remain their sole responsibility. The Company shall not be "
+    "responsible for any actions taken or not taken by the Client or any participant based on "
+    "the Services provided."
+)
+p(
+    "To the fullest extent permitted by law, the Company shall not be liable for any indirect, "
+    "incidental, special, consequential, punitive, or exemplary damages arising out of or "
+    "relating to this Agreement or the Services, including, without limitation, lost profits, "
+    "lost revenue, loss of business opportunity, or business interruption."
+)
+p(
+    "Except in cases of the Company’s gross negligence, willful misconduct, or violation of "
+    "applicable law, the Company’s total liability arising out of or relating to this "
+    "Agreement or the Services shall not exceed the total fees paid by the Client under this "
+    "Agreement."
+)
+p(
+    "The Client agrees to indemnify and hold harmless the Company and its officers, employees, "
+    "contractors, coaches, and representatives from any third-party claims, damages, "
+    "liabilities, costs, or expenses arising from (i) the Client’s breach of this Agreement, "
+    "(ii) the Client’s misuse of the Services, or (iii) the actions or omissions of the "
+    "Client, its employees, contractors, or representatives, except to the extent resulting "
+    "from the Company’s gross negligence or willful misconduct."
+)
+
+h1("8. Applicable Law and Attorneys’ Fees")
+p(
+    "This Agreement shall be governed by the laws of the State of New York. In the event of a "
+    "legal dispute arising out of this Agreement, the prevailing party shall be entitled to "
+    "recover its reasonable attorneys’ fees and costs from the non-prevailing party."
 )
 
 h1("9. Severability.")
@@ -209,10 +235,11 @@ p(
     "affecting the validity or enforceability of this Agreement."
 )
 
+doc.add_paragraph("")
 p(
     "The Client’s authorized signature below indicates that the Client has read and agrees to "
-    "abide by the terms and conditions of this Agreement. The Client affirms and agrees that no "
-    "promises or agreements which are not herein expressed have been made to the Client in "
+    "abide by the terms and conditions of this Agreement.  The Client affirms and agrees that "
+    "no promises or agreements which are not herein expressed have been made to the Client in "
     "executing this Agreement."
 )
 

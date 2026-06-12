@@ -153,7 +153,9 @@ def _remove_paragraph(paragraph):
     p.getparent().remove(p)
 
 
-def build_services_agreement_bytes(client_company: str, client_signer: str, fee_lines: list) -> bytes:
+def build_services_agreement_bytes(client_company: str, client_signer: str,
+                                     fee_lines: list, cancellation_lines: list,
+                                     invoicing_line: str) -> bytes:
     with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as tmp:
         tmp_path = Path(tmp.name)
 
@@ -165,16 +167,35 @@ def build_services_agreement_bytes(client_company: str, client_signer: str, fee_
         ("[Client Signer Name]",  client_signer),
     ]
 
-    placeholder_para = None
+    fee_para = None
+    cancellation_para = None
+    invoicing_para = None
     for para in document.paragraphs:
         for old, new in replacements:
             replace_in_paragraph(para, old, new)
-        if "[FEES_SECTION]" in para.text:
-            placeholder_para = para
+        if "[Fee Section]" in para.text:
+            fee_para = para
+        elif "[Cancellation Policy]" in para.text:
+            cancellation_para = para
+        elif para.text.strip().startswith("Invoices will be issued"):
+            invoicing_para = para
 
-    if placeholder_para is not None:
-        _insert_lines_after(placeholder_para, fee_lines)
-        _remove_paragraph(placeholder_para)
+    if invoicing_para is not None and invoicing_line:
+        for run in invoicing_para.runs[1:]:
+            run.text = ""
+        if invoicing_para.runs:
+            invoicing_para.runs[0].text = invoicing_line
+        else:
+            invoicing_para.add_run(invoicing_line)
+
+    if cancellation_para is not None:
+        if cancellation_lines:
+            _insert_lines_after(cancellation_para, cancellation_lines)
+        _remove_paragraph(cancellation_para)
+
+    if fee_para is not None:
+        _insert_lines_after(fee_para, fee_lines)
+        _remove_paragraph(fee_para)
 
     buf = io.BytesIO()
     document.save(buf)
@@ -631,33 +652,41 @@ else:
         **invoicing_config,
     }
 
-    generated_lines = fb.build_fee_section_lines(state)
-    generated_text = fb.lines_to_text(generated_lines)
+    generated_fee_text = fb.lines_to_text(fb.build_fee_section_lines(state))
+    generated_cancellation_text = fb.lines_to_text(fb.build_cancellation_section_lines(state))
+    generated_invoicing_text = fb.build_invoicing_text(state)[0]
 
     if st.session_state.pop("sa_sync_text", False):
-        st.session_state["sa_section3_text"] = generated_text
-    st.session_state.setdefault("sa_section3_text", generated_text)
+        st.session_state["sa_fee_text"] = generated_fee_text
+        st.session_state["sa_cancellation_text"] = generated_cancellation_text
+        st.session_state["sa_invoicing_text"] = generated_invoicing_text
+    st.session_state.setdefault("sa_fee_text", generated_fee_text)
+    st.session_state.setdefault("sa_cancellation_text", generated_cancellation_text)
+    st.session_state.setdefault("sa_invoicing_text", generated_invoicing_text)
 
     st.divider()
     st.subheader("Step 8: Section 3 — Live Preview & Manual Edit")
 
     if st.button("Reset text to generated section"):
-        st.session_state["sa_section3_text"] = generated_text
+        st.session_state["sa_fee_text"] = generated_fee_text
+        st.session_state["sa_cancellation_text"] = generated_cancellation_text
+        st.session_state["sa_invoicing_text"] = generated_invoicing_text
         st.rerun()
 
-    section3_text = st.text_area(
-        "Edit the generated language below if needed. Lines starting with \"• \" "
-        "become bullet points.",
-        key="sa_section3_text",
-        height=260,
+    fee_text = st.text_area("Fees, Additional Services & Expenses", key="sa_fee_text", height=180)
+    cancellation_text = st.text_area(
+        "Cancellation Policy (lines starting with \"• \" become bullet points)",
+        key="sa_cancellation_text", height=120,
     )
+    invoicing_text = st.text_area("Invoicing & Payment", key="sa_invoicing_text", height=70)
 
     with st.expander("Preview", expanded=True):
-        for line in section3_text.splitlines():
-            if line.strip().startswith("• "):
-                st.markdown(f"- {line.strip()[2:]}")
-            elif line.strip():
-                st.write(line.strip())
+        for section_text in (fee_text, cancellation_text, invoicing_text):
+            for line in section_text.splitlines():
+                if line.strip().startswith("• "):
+                    st.markdown(f"- {line.strip()[2:]}")
+                elif line.strip():
+                    st.write(line.strip())
 
     st.divider()
     if st.button("Generate & Send Services Agreement", type="primary", use_container_width=True):
@@ -675,9 +704,12 @@ else:
         else:
             with st.spinner("Generating agreement and sending email…"):
                 try:
-                    fee_lines = fb.text_to_lines(section3_text)
+                    fee_lines = fb.text_to_lines(fee_text)
+                    cancellation_lines = fb.text_to_lines(cancellation_text)
+                    invoicing_line = " ".join(fb.text_to_lines(invoicing_text))
                     doc_bytes = build_services_agreement_bytes(
-                        client_company.strip(), client_signer.strip(), fee_lines
+                        client_company.strip(), client_signer.strip(),
+                        fee_lines, cancellation_lines, invoicing_line,
                     )
                     send_services_agreement_email(
                         client_company.strip(), client_signer.strip(),

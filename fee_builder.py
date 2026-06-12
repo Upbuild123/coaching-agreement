@@ -65,7 +65,7 @@ def default_state(engagement_type: str) -> dict:
         "expense_approver": "the Client",
         "invoice_frequency": "Quarterly",
         "invoice_frequency_custom": "",
-        "payment_terms": "15 Days",
+        "payment_terms": "30 Days",
         "payment_terms_custom": "",
     }
 
@@ -364,11 +364,7 @@ def build_cancellation_text(policies: List[dict]) -> List[str]:
 
 
 def build_fee_section_lines(state: dict) -> List[str]:
-    """Assemble the full Section 3 body as an ordered list of lines/paragraphs.
-
-    Each item is one paragraph or bullet line, in display order:
-    Fees -> Additional Services -> Expenses -> Invoicing -> Cancellation Policy.
-    """
+    """Build the [Fee Section] body: Fees -> Additional Services -> Expenses."""
     lines: List[str] = []
 
     lines.extend(build_fees_paragraphs(
@@ -385,11 +381,12 @@ def build_fee_section_lines(state: dict) -> List[str]:
 
     lines.extend(build_expenses_text(state))
 
-    lines.extend(build_invoicing_text(state))
-
-    lines.extend(build_cancellation_text(state.get("cancellation_policies", [])))
-
     return lines
+
+
+def build_cancellation_section_lines(state: dict) -> List[str]:
+    """Build the [Cancellation Policy] body."""
+    return build_cancellation_text(state.get("cancellation_policies", []))
 
 
 def lines_to_text(lines: List[str]) -> str:
