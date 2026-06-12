@@ -172,17 +172,21 @@ st.set_page_config(page_title="Upbuild | New Coaching Agreement", page_icon="ðŸ“
 
 st.markdown("""
 <style>
+    header[data-testid="stHeader"] {
+        background: #14141f;
+        height: 4rem;
+    }
     .stApp {
         background: #f4f5f7;
     }
     .block-container {
         max-width: 640px;
-        padding-top: 0 !important;
+        padding-top: 2rem !important;
     }
     #upbuild-topbar {
         background: #14141f;
         color: #ffffff;
-        margin: -1px -1px 2.5rem -1px;
+        margin: -5rem -1px 2.5rem -1px;
         padding: 1.1rem 2rem;
         border-radius: 0 0 12px 12px;
         font-size: 1.15rem;
@@ -191,6 +195,9 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        position: relative;
+        z-index: 999;
+        height: 4rem;
     }
     #upbuild-heading h1 {
         font-size: 1.8rem;
@@ -215,11 +222,11 @@ st.markdown("""
         border-color: #e0e0e8 !important;
     }
     .stTextInput input:focus, .stSelectbox div[data-baseweb="select"]:focus-within > div {
-        border-color: #5b2a8c !important;
-        box-shadow: 0 0 0 1px #5b2a8c !important;
+        border-color: #4c2889 !important;
+        box-shadow: 0 0 0 1px #4c2889 !important;
     }
     .stButton button, button[kind="primary"], button[kind="formSubmit"] {
-        background-color: #5b2a8c !important;
+        background-color: #4c2889 !important;
         color: #fff !important;
         border-radius: 8px !important;
         border: none !important;
@@ -228,7 +235,7 @@ st.markdown("""
         transition: background-color 0.15s ease !important;
     }
     .stButton button:hover, button[kind="primary"]:hover, button[kind="formSubmit"]:hover {
-        background-color: #471f6e !important;
+        background-color: #3a1f6b !important;
     }
     label {
         font-weight: 600 !important;
