@@ -44,7 +44,7 @@ COACH_EMAILS = {
 }
 
 TEMPLATE = Path(__file__).parent / "Upbuild Coaching Agreement - Sample.docx"
-SERVICES_TEMPLATE = Path(__file__).parent / "Upbuild Services Agreement - Template.docx"
+SERVICES_TEMPLATE = Path(__file__).parent / "Upbuild Services Agreement - Sample.docx"
 
 
 # ---------------------------------------------------------------------------
@@ -141,11 +141,7 @@ def _insert_lines_after(paragraph, lines):
         anchor.addnext(new_p)
         anchor = new_p
         new_para = Paragraph(new_p, paragraph._parent)
-        if line.startswith("• "):
-            new_para.style = "List Bullet"
-            new_para.add_run(line[2:])
-        else:
-            new_para.add_run(line)
+        new_para.add_run(line)
 
 
 def _remove_paragraph(paragraph):
