@@ -168,9 +168,71 @@ def send_email(first_name: str, last_name: str, client_email: str,
 
 load_env()
 
-st.set_page_config(page_title="New Coaching Agreement", page_icon="📄")
-st.title("New Coaching Agreement")
-st.caption("Fill in the client's details to generate and send the agreement.")
+st.set_page_config(page_title="New Coaching Agreement", page_icon="📄", layout="centered")
+
+st.markdown("""
+<style>
+    .stApp {
+        background: linear-gradient(135deg, #f5f5f0 0%, #eef2ee 100%);
+    }
+    .block-container {
+        max-width: 640px;
+        padding-top: 3rem;
+    }
+    #upbuild-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 2.5rem 2.5rem 1.5rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        border: 1px solid #e8e8e2;
+        margin-bottom: 1.5rem;
+    }
+    #upbuild-card h1 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #2c3e2e;
+        margin-bottom: 0.25rem;
+    }
+    #upbuild-card p {
+        color: #6b7268;
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+    div[data-testid="stForm"] {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 2rem 2.5rem 2.5rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        border: 1px solid #e8e8e2;
+    }
+    .stTextInput input, .stSelectbox div[data-baseweb="select"] {
+        border-radius: 8px;
+    }
+    .stButton button, button[kind="primary"], button[kind="formSubmit"] {
+        background-color: #4a7c5e !important;
+        color: #fff !important;
+        border-radius: 8px !important;
+        border: none !important;
+        font-weight: 600 !important;
+        padding: 0.6rem 1.5rem !important;
+        transition: background-color 0.15s ease !important;
+    }
+    .stButton button:hover, button[kind="primary"]:hover, button[kind="formSubmit"]:hover {
+        background-color: #3a6349 !important;
+    }
+    label {
+        font-weight: 500 !important;
+        color: #3a3f3a !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div id="upbuild-card">
+    <h1>📄 New Coaching Agreement</h1>
+    <p>Fill in the client's details below to generate and send the agreement.</p>
+</div>
+""", unsafe_allow_html=True)
 
 with st.form("agreement_form"):
     col1, col2 = st.columns(2)
@@ -185,7 +247,8 @@ with st.form("agreement_form"):
     rate = st.text_input("Session rate ($)", placeholder="600",
                           help="Numbers only, e.g. 600")
 
-    submitted = st.form_submit_button("Generate & Send Agreement", type="primary")
+    st.write("")
+    submitted = st.form_submit_button("Generate & Send Agreement", type="primary", use_container_width=True)
 
 if submitted:
     errors = []
