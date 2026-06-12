@@ -37,6 +37,7 @@ ENGAGEMENT_TYPES = [
     "Variable Coaching Rates",
     "Fixed-Fee Workshop / Offsite",
     "Enterprise Engagement",
+    "Monthly Retainer",
     "Custom",
 ]
 
@@ -128,6 +129,29 @@ def default_state(engagement_type: str) -> dict:
              "notice_period": "2", "charge_text": "the full session fee", "additional_text": ""},
             {"policy_type": "Workshop / Offsite", "service_type": "workshop or in-person session",
              "notice_period": "10", "charge_text": "in full", "additional_text": ""},
+        ]
+
+    elif engagement_type == "Monthly Retainer":
+        state["fee_items"] = [
+            {"name": "executive coaching", "pricing_type": "Custom Text", "rate": (
+                "The Client will engage the Company on a monthly executive coaching "
+                "retainer of $(Fee) per month. This retainer includes up to two "
+                "60-minute coaching sessions per month for the Client's CEO. "
+                "Additional coaching sessions, consulting, facilitation, or other "
+                "services requested beyond the scope of the monthly retainer will be "
+                "billed at a rate of $(Fee)/hour, unless otherwise agreed upon by the "
+                "parties."
+            ), "notes": ""},
+        ]
+        state["additional_services_text"] = (
+            "The intent of this arrangement is to provide flexible and responsive "
+            "support while maintaining a simple and predictable fee structure. Any "
+            "substantial work beyond the scope of the monthly retainer will be "
+            "discussed and agreed upon in advance."
+        )
+        state["cancellation_policies"] = [
+            {"policy_type": "Standard Coaching", "service_type": "",
+             "notice_period": "2", "charge_text": "", "additional_text": ""},
         ]
 
     else:  # Custom

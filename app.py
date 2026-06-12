@@ -676,8 +676,15 @@ else:
     )
     invoicing_text = st.text_area("Invoicing & Payment", key="sa_invoicing_text", height=70)
 
+    st.subheader("Step 9: Additional Custom Terms (optional)")
+    st.caption(
+        "Freeform text appended to the end of Section 3. Use this for any "
+        "engagement-specific language not covered above."
+    )
+    custom_terms_text = st.text_area("Additional custom terms", key="sa_custom_terms_text", height=120)
+
     with st.expander("Preview", expanded=True):
-        for section_text in (fee_text, cancellation_text, invoicing_text):
+        for section_text in (fee_text, cancellation_text, invoicing_text, custom_terms_text):
             for line in section_text.splitlines():
                 if line.strip().startswith("• "):
                     st.markdown(f"- {line.strip()[2:]}")
@@ -701,6 +708,8 @@ else:
             with st.spinner("Generating agreement and sending email…"):
                 try:
                     fee_lines = fb.text_to_lines(fee_text)
+                    if custom_terms_text.strip():
+                        fee_lines += fb.text_to_lines(custom_terms_text)
                     cancellation_lines = fb.text_to_lines(cancellation_text)
                     invoicing_line = " ".join(fb.text_to_lines(invoicing_text))
                     doc_bytes = build_services_agreement_bytes(
