@@ -225,7 +225,13 @@ st.markdown("""
         border-color: #4c2889 !important;
         box-shadow: 0 0 0 1px #4c2889 !important;
     }
-    .stButton button, button[kind="primary"], button[kind="formSubmit"] {
+    .stButton button,
+    .stFormSubmitButton button,
+    button[kind="primary"],
+    button[kind="primaryFormSubmit"],
+    div[data-testid="stFormSubmitButton"] button,
+    button[data-testid="stBaseButton-primary"],
+    button[data-testid="stBaseButton-primaryFormSubmit"] {
         background-color: #4c2889 !important;
         color: #fff !important;
         border-radius: 8px !important;
@@ -234,8 +240,15 @@ st.markdown("""
         padding: 0.65rem 1.5rem !important;
         transition: background-color 0.15s ease !important;
     }
-    .stButton button:hover, button[kind="primary"]:hover, button[kind="formSubmit"]:hover {
+    .stButton button:hover,
+    .stFormSubmitButton button:hover,
+    button[kind="primary"]:hover,
+    button[kind="primaryFormSubmit"]:hover,
+    div[data-testid="stFormSubmitButton"] button:hover,
+    button[data-testid="stBaseButton-primary"]:hover,
+    button[data-testid="stBaseButton-primaryFormSubmit"]:hover {
         background-color: #3a1f6b !important;
+        color: #fff !important;
     }
     label {
         font-weight: 600 !important;
